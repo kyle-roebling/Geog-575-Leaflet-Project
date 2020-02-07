@@ -2,6 +2,22 @@
     height: 400px;
 }
 
+#slider{
+    text-align: center;
+}
+
 .leaflet-popup-content p {
     margin: 0.2em 0;
-}git 
+}
+
+.range-slider {
+    width: 50%;
+}
+
+#forward{
+    float: right;
+}
+
+#reverse{
+    float: left;
+}
