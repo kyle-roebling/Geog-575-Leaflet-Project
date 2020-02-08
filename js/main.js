@@ -30,22 +30,65 @@ function createMap(){
 
 };
 
+//calculate the radius of each proportional symbol
+function calcPropRadius(attValue) {
+    //scale factor to adjust symbol size evenly
+    var scaleFactor = 50;
+    //area based on attribute value and scale factor
+    var area = attValue * scaleFactor;
+    //radius calculated based on area
+    var radius = Math.sqrt(area/Math.PI);
+    return radius;
+};
+
+
 // function that creates marker symbols and creates a geoJson layer to add to the map
-function createMarkers(map,response){
+function pointToLayer(feature,latlng){
+    // Assign Attribute field to show
+    var attribute = "May";
+    
     //create marker options
-    var geojsonMarkerOptions = {
+    var options = {
         radius: 8,
-        fillColor: "#ff7800",
+        fillColor: "Red",
         color: "#000",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8
+<<<<<<< HEAD
 }
         //create a Leaflet GeoJSON layer and add it to the map
         L.geoJson(response, {
                 pointToLayer: function (feature, latlng){
                     return L.circleMarker(latlng, geojsonMarkerOptions);
                     }
+=======
+};
+    
+    //For each feature, determine its value for the selected attribute
+    var attValue = Number(feature.properties[attribute]);
+
+    //Give each feature's circle marker a radius based on its attribute value
+    options.radius = calcPropRadius(attValue);
+
+    //create circle marker layer
+    var layer = L.circleMarker(latlng, options);
+
+    //build popup content string
+    var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p>" + "<p> <b>Tornadoes: </b>" +  feature.properties[attribute]  +"</p>"
+
+    //bind the popup to the circle marker
+    layer.bindPopup(popupContent);
+
+    //return the circle marker to the L.geoJson pointToLayer option
+    return layer;
+};
+
+function createMarkers(map,data){
+    //create a Leaflet GeoJSON layer and add it to the map
+    L.geoJson(data, {
+            pointToLayer: pointToLayer
+>>>>>>> refs/remotes/origin/master
         }).addTo(map);
 }
 
