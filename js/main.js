@@ -10,7 +10,7 @@ leaftet mapping api
 var center = [38.50,-98.00]
 var tileLayer = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 var attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-var months = ['January','Febuary','March','April','May','June','July','August','September','October','November','December']
+var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
 
 // Function to create map object, tile map background and load data to map
@@ -87,7 +87,7 @@ function createMarkers(map,data, months){
 }
 
 // Create slider of the sequence interaction with the user
-function createSequenceControls(map){
+function createSequenceControls(map,months){
     //Slider
     $('#slider').append('<input class="range-slider" type="range">');
     //Foward and Reverse Buttons
@@ -104,13 +104,14 @@ function createSequenceControls(map){
         value: 0,
         step: 1
     });
+
     
     //input listener for slider
     $('.range-slider').click(function(){
         // starting index value
         var index = $('.range-slider').val();
         console.log(index);
-        
+        updatePropSymbols(map, months[index]);
     });
     
     //input listener for buttons
@@ -123,35 +124,39 @@ function createSequenceControls(map){
             index++;
             //if past the last attribute, wrap around to first attribute
             index = index > 11 ? 0 : index;
-            console.log(index);
+            
+            updatePropSymbols(map, months[index]);
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //if past the first attribute, wrap around to last attribute
             index = index < 0 ? 11 : index;
-            console.log(index);
+            updatePropSymbols(map, months[index]);
         };
         
         //update slider
         $('.range-slider').val(index);
         
-        return index
     });
 }
 
 // Update the symbols as the months change
 function updatePropSymbols(map, month){
+    console.log(month);
     map.eachLayer(function(layer){
         if (layer.feature && layer.feature.properties[month]){
             
             //access feature properties
             var props = layer.feature.properties;
             
+            //For each feature, determine its value for the selected attribute
+            var attValue = Number(props[month]);
+            console.log(attValue);
             //update each feature's radius based on new attribute values
-            var radius = calcPropRadius(props[month]);
+            var radius = calcPropRadius(attValue);
             layer.setRadius(radius);
             
             //build popup content string
-            var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p>" + "<p> <b>Tornadoes: </b>" +  feature.properties[month]  +"</p>"
+            var popupContent = "<p><b>State:</b> " + props.State + "</p>" + "<p> <b>Tornadoes: </b>" +  props[month]  +"</p>"
 
             //bind the popup to the circle marker
             layer.bindPopup(popupContent);
@@ -167,9 +172,9 @@ function getData(map){
     $.ajax("data/tornadoData.geojson", {
         dataType: "json",
         success: function(response){
-            createMarkers(map,response);
-            index = createSequenceControls(map);
-            updatePropSymbols(map, months[index]);
+            createMarkers(map,response,months);
+            createSequenceControls(map,months);
+
         }
     });
 }
