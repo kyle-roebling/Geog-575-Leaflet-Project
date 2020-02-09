@@ -59,14 +59,7 @@ function pointToLayer(feature,latlng, months){
         fillOpacity: 0.8
 
 }
-        //create a Leaflet GeoJSON layer and add it to the map
-        L.geoJson(response, {
-                pointToLayer: function (feature, latlng){
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                    }
 
-};
-    
     //For each feature, determine its value for the selected attribute
     var attValue = Number(feature.properties[attribute]);
     
@@ -89,8 +82,6 @@ function pointToLayer(feature,latlng, months){
 function createMarkers(map,data, months){
     //create a Leaflet GeoJSON layer and add it to the map
     L.geoJson(data, {
-
-            pointToLayer: pointToLayer
 
             pointToLayer: function(feature, latlng){
                 return pointToLayer(feature, latlng, months);
