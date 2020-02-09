@@ -10,6 +10,8 @@ leaftet mapping api
 var center = [38.50,-98.00]
 var tileLayer = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 var attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
 
 // Function to create map object, tile map background and load data to map
 function createMap(){ 
@@ -41,11 +43,11 @@ function calcPropRadius(attValue) {
     return radius;
 };
 
-
 // function that creates marker symbols and creates a geoJson layer to add to the map
-function pointToLayer(feature,latlng){
+function pointToLayer(feature,latlng, months){
+    
     // Assign Attribute field to show
-    var attribute = "May";
+    var attribute = months[0];
     
     //create marker options
     var options = {
@@ -55,19 +57,19 @@ function pointToLayer(feature,latlng){
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8
-<<<<<<< HEAD
+
 }
         //create a Leaflet GeoJSON layer and add it to the map
         L.geoJson(response, {
                 pointToLayer: function (feature, latlng){
                     return L.circleMarker(latlng, geojsonMarkerOptions);
                     }
-=======
+
 };
     
     //For each feature, determine its value for the selected attribute
     var attValue = Number(feature.properties[attribute]);
-
+    
     //Give each feature's circle marker a radius based on its attribute value
     options.radius = calcPropRadius(attValue);
 
@@ -84,12 +86,99 @@ function pointToLayer(feature,latlng){
     return layer;
 };
 
-function createMarkers(map,data){
+function createMarkers(map,data, months){
     //create a Leaflet GeoJSON layer and add it to the map
     L.geoJson(data, {
+
             pointToLayer: pointToLayer
->>>>>>> refs/remotes/origin/master
+
+            pointToLayer: function(feature, latlng){
+                return pointToLayer(feature, latlng, months);
+            }
+
         }).addTo(map);
+}
+
+// Create slider of the sequence interaction with the user
+function createSequenceControls(map,months){
+    //Slider
+    $('#slider').append('<input class="range-slider" type="range">');
+    //Foward and Reverse Buttons
+    $('#slider').append('<button class="skip" id="reverse">Reverse</button>');
+    $('#slider').append('<button class="skip" id="forward">Skip</button>');
+    //Add icons for Foward and Reverse
+    $('#reverse').html('<img src="img/reverse.png">');
+    $('#forward').html('<img src="img/forward.png">');
+    
+    //set slider attributes
+    $('.range-slider').attr({
+        max: 11,
+        min: 0,
+        value: 0,
+        step: 1
+    });
+
+    
+    //input listener for slider
+    $('.range-slider').click(function(){
+        // starting index value
+        var index = $('.range-slider').val();
+  
+        updatePropSymbols(map, months[index]);
+    });
+    
+    //input listener for buttons
+    $('.skip').click(function(){
+        //Assign slider index value
+        var index = $('.range-slider').val();
+        
+        //increment or decrement depending on button clicked
+        if ($(this).attr('id') == 'forward'){
+            index++;
+            //if past the last attribute, wrap around to first attribute
+            index = index > 11 ? 0 : index;
+            
+            updatePropSymbols(map, months[index]);
+        } else if ($(this).attr('id') == 'reverse'){
+            index--;
+            //if past the first attribute, wrap around to last attribute
+            index = index < 0 ? 11 : index;
+            updatePropSymbols(map, months[index]);
+        };
+        
+        //update slider
+        $('.range-slider').val(index);
+        
+    });
+}
+
+// Update the symbols as the months change
+function updatePropSymbols(map, month){
+
+    map.eachLayer(function(layer){
+
+        if (layer.feature && layer.feature.properties['State']){
+            console.log(month);
+            console.log(layer.feature.properties['State']);
+            
+            //access feature properties
+            var props = layer.feature.properties;
+        
+            //For each feature, determine its value for the selected attribute
+            var newValue = Number(props[month]);
+            
+            //update each feature's radius based on new attribute values
+            var radius = calcPropRadius(newValue);
+            layer.setRadius(radius);
+            
+            //build popup content string
+            var popupContent = "<p><b>State:</b> " + props.State + "</p>" + "<p> <b>Tornadoes: </b>" +  props[month]  +"</p>"
+
+            //bind the popup to the circle marker
+            layer.bindPopup(popupContent);
+            
+        };
+});
 }
 
 
@@ -98,7 +187,9 @@ function getData(map){
     $.ajax("data/tornadoData.geojson", {
         dataType: "json",
         success: function(response){
-            createMarkers(map,response);
+            createMarkers(map,response,months);
+            createSequenceControls(map,months);
+
         }
     });
 }
