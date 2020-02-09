@@ -45,6 +45,7 @@ function calcPropRadius(attValue) {
 
 // function that creates marker symbols and creates a geoJson layer to add to the map
 function pointToLayer(feature,latlng, months){
+    
     // Assign Attribute field to show
     var attribute = months[0];
     
@@ -60,7 +61,7 @@ function pointToLayer(feature,latlng, months){
     
     //For each feature, determine its value for the selected attribute
     var attValue = Number(feature.properties[attribute]);
-
+    
     //Give each feature's circle marker a radius based on its attribute value
     options.radius = calcPropRadius(attValue);
 
@@ -110,7 +111,7 @@ function createSequenceControls(map,months){
     $('.range-slider').click(function(){
         // starting index value
         var index = $('.range-slider').val();
-        console.log(index);
+  
         updatePropSymbols(map, months[index]);
     });
     
@@ -141,18 +142,21 @@ function createSequenceControls(map,months){
 
 // Update the symbols as the months change
 function updatePropSymbols(map, month){
-    console.log(month);
+
     map.eachLayer(function(layer){
-        if (layer.feature && layer.feature.properties[month]){
+
+        if (layer.feature && layer.feature.properties['State']){
+            console.log(month);
+            console.log(layer.feature.properties['State']);
             
             //access feature properties
             var props = layer.feature.properties;
-            
+        
             //For each feature, determine its value for the selected attribute
-            var attValue = Number(props[month]);
-            console.log(attValue);
+            var newValue = Number(props[month]);
+            
             //update each feature's radius based on new attribute values
-            var radius = calcPropRadius(attValue);
+            var radius = calcPropRadius(newValue);
             layer.setRadius(radius);
             
             //build popup content string
@@ -162,9 +166,8 @@ function updatePropSymbols(map, month){
             layer.bindPopup(popupContent);
             
         };
-    });
+});
 }
-
 
 
 // load dataset tornadoData.geojason using Ajax call
