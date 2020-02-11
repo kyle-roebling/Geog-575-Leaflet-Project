@@ -161,9 +161,7 @@ function updatePropSymbols(map, month){
     map.eachLayer(function(layer){
 
         if (layer.feature && layer.feature.properties['State']){
-            console.log(month);
-            console.log(layer.feature.properties['State']);
-            
+
             //access feature properties
             var props = layer.feature.properties;
         
