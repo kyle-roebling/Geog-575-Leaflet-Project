@@ -1,9 +1,26 @@
+
 #mapid {
-    height: 400px;
+    height: 550px;
+    width: 75%;
+    display: inline-block;
+}
+
+#panel{
+    width: 18%;
+    padding: 20px;
+    text-align: center;
+    display: inline-block;
+    float: right;
+    vertical-align: top;
+}
+
+#li{
+    text-align: left;
 }
 
 #slider{
     text-align: center;
+    width: 75%;
 }
 
 .leaflet-popup-content h4 {

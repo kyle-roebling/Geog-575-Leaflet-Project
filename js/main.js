@@ -86,6 +86,9 @@ function pointToLayer(feature,latlng, months){
             this.closePopup();
         }
     });
+    
+    panel_list(feature,attribute);
+        
 
     //return the circle marker to the L.geoJson pointToLayer option
     return layer;
@@ -126,7 +129,7 @@ function createSequenceControls(map,months){
     $('.range-slider').click(function(){
         // starting index value
         var index = $('.range-slider').val();
-  
+        clear_panel();
         updatePropSymbols(map, months[index]);
     });
     
@@ -140,12 +143,13 @@ function createSequenceControls(map,months){
             index++;
             //if past the last attribute, wrap around to first attribute
             index = index > 11 ? 0 : index;
-            
+            clear_panel();
             updatePropSymbols(map, months[index]);
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //if past the first attribute, wrap around to last attribute
             index = index < 0 ? 11 : index;
+            clear_panel();
             updatePropSymbols(map, months[index]);
         };
         
@@ -154,6 +158,19 @@ function createSequenceControls(map,months){
         
     });
 }
+
+function panel_list(feature,month){
+    
+    if (feature.properties[month] > 0){
+         // Add tornado data to the side panel
+        $("#state_list").append("<li>" + feature.properties.State + "  "  +  feature.properties[month]  + "</li>");
+    
+    };
+};
+
+function clear_panel(){
+    $("ul").empty();
+};
 
 // Update the symbols as the months change
 function updatePropSymbols(map, month){
@@ -178,6 +195,8 @@ function updatePropSymbols(map, month){
             //bind the popup to the circle marker
             layer.bindPopup(popupContent);
             
+            panel_list(layer.feature,month);
+        
         };
 });
 }
