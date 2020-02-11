@@ -73,7 +73,19 @@ function pointToLayer(feature,latlng, months){
     var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p>" + "<p> <b>Tornadoes: </b>" +  feature.properties[attribute]  +"</p>"
 
     //bind the popup to the circle marker
-    layer.bindPopup(popupContent);
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0,-options.radius)
+    });
+    
+    //event listeners to open popup on hover
+    layer.on({
+        mouseover: function(){
+            this.openPopup();
+        },
+        mouseout: function(){
+            this.closePopup();
+        }
+    });
 
     //return the circle marker to the L.geoJson pointToLayer option
     return layer;
