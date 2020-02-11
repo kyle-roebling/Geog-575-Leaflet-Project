@@ -70,7 +70,7 @@ function pointToLayer(feature,latlng, months){
     var layer = L.circleMarker(latlng, options);
 
     //build popup content string
-    var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p>" + "<p> <b>Tornadoes: </b>" +  feature.properties[attribute]  +"</p>"
+    var popupContent = "<h4>"+ months[0] + "</h4>"+ "<p><b>State:</b> " + feature.properties.State + "</p>" + "<p> <b>Tornadoes: </b>" +  feature.properties[attribute]  +"</p>"
 
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
@@ -173,7 +173,7 @@ function updatePropSymbols(map, month){
             layer.setRadius(radius);
             
             //build popup content string
-            var popupContent = "<p><b>State:</b> " + props.State + "</p>" + "<p> <b>Tornadoes: </b>" +  props[month]  +"</p>"
+            var popupContent = "<h4>"+ month + "</h4>"+"<p><b>State:</b> " + props.State + "</p>" + "<p> <b>Tornadoes: </b>" +  props[month]  +"</p>"
 
             //bind the popup to the circle marker
             layer.bindPopup(popupContent);
