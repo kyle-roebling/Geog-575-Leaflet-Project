@@ -94,15 +94,15 @@ function pointToLayer(feature,latlng, months){
     return layer;
 };
 
-function createMarkers(map,data, months){
+function createPoints(map,data, months){
     //create a Leaflet GeoJSON layer and add it to the map
-    L.geoJson(data, {
+    statePoints = L.geoJson(data, {
 
-            pointToLayer: function(feature, latlng){
-                return pointToLayer(feature, latlng, months);
-            }
+                pointToLayer: function(feature, latlng){
+                    return pointToLayer(feature, latlng, months);
+                }
 
-        }).addTo(map);
+                });
 }
 
 // Create slider of the sequence interaction with the user
@@ -130,7 +130,7 @@ function createSequenceControls(map,months){
         // starting index value
         var index = $('.range-slider').val();
         clear_panel();
-        updatePropSymbols(map, months[index]);
+        updatePoints(map, months[index]);
     });
     
     //input listener for buttons
@@ -144,13 +144,13 @@ function createSequenceControls(map,months){
             //if past the last attribute, wrap around to first attribute
             index = index > 11 ? 0 : index;
             clear_panel();
-            updatePropSymbols(map, months[index]);
+            updatePoints(map, months[index]);
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //if past the first attribute, wrap around to last attribute
             index = index < 0 ? 11 : index;
             clear_panel();
-            updatePropSymbols(map, months[index]);
+            updatePoints(map, months[index]);
         };
         
         //update slider
@@ -173,7 +173,7 @@ function clear_panel(){
 };
 
 // Update the symbols as the months change
-function updatePropSymbols(map, month){
+function updatePoints(map, month){
 
     map.eachLayer(function(layer){
 
@@ -207,7 +207,8 @@ function getData(map){
     $.ajax("data/tornadoData.geojson", {
         dataType: "json",
         success: function(response){
-            createMarkers(map,response,months);
+            createPoints(map,response,months);
+            statePoints.addTo(map);
             createSequenceControls(map,months);
 
         }
