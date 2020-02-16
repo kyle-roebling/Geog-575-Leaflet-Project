@@ -237,9 +237,6 @@ function choropleth(feature) {
     };
 }
 
-function updatePolygons(layer,month) {
-    
-}
 
 function checkRadio(map,statePoints,statePolygons){
     // add points to map first
