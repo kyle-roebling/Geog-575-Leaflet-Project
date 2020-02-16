@@ -27,9 +27,9 @@ function createMap(){
         attribution: attribution
     }).addTo(map);
     
-    //load data to the map
+    //load data from source files
     getData(map);
-
+    
 };
 
 //calculate the radius of each proportional symbol
@@ -96,7 +96,7 @@ function pointToLayer(feature,latlng, months){
 
 function createPoints(map,data, months){
     //create a Leaflet GeoJSON layer and add it to the map
-    statePoints = L.geoJson(data, {
+    return  L.geoJson(data, {
 
                 pointToLayer: function(feature, latlng){
                     return pointToLayer(feature, latlng, months);
@@ -202,19 +202,76 @@ function updatePoints(map, month){
 }
 
 
-// load dataset tornadoData.geojason using Ajax call
-function getData(map){
-    $.ajax("data/tornadoData.geojson", {
-        dataType: "json",
-        success: function(response){
-            createPoints(map,response,months);
-            statePoints.addTo(map);
-            createSequenceControls(map,months);
-
-        }
-    });
+function createPolygons(map,data){
+    return L.geoJSON(data);
 }
 
+function checkRadio(map,statePoints,statePolygons){
+    // add points to map first
+    statePoints.addTo(map);
+    
+    // if choropleth is selected remove proportional symbols and add choropleth
+    $("#polygon").on( "click", function(){
+        console.log('polygon');
+        $("#point").prop("checked", false)
+        if ($("input:checked" ).val() === "Choropleth"){
+            $("#polygon").prop("checked", true);
+            console.log($("input:checked" ).val());
+            statePoints.remove();
+            statePolygons.addTo(map);
+        };
+    });
+    
+    // if proportional is selected remove choropleth symbols and add proportional
+    $("#point").on( "click", function(){
+        $("#polygon").prop("checked", false)
+        console.log('point');
+        if ($( "input:checked" ).val() === "Proportional"){
+            $("#point").prop("checked", true)
+            $("#polygon").prop("checked", false);
+            statePolygons.remove();
+            statePoints.addTo(map);
+        };
+    });
+    
+};
+    
+
+
+// load dataset tornadoData.geojason using Ajax call
+function getData(map){
+    
+    $.when(pointData(), polygonData()).done(function(responsePoints, responsePolygons){
+            statePoints = createPoints(map,responsePoints,months);
+            statePolygons = createPolygons(map,responsePolygons);
+            createSequenceControls(map,months);
+            checkRadio(map,statePoints,statePolygons);
+    });
+
+
+    function pointData(){
+        return $.ajax("data/tornadoData.geojson", {    
+                dataType: "json"
+                //success: function(response){
+                    //createPoints(map,response,months);
+                    //createSequenceControls(map,months);
+            })
+            //});
+    };
+
+    function polygonData(){
+        return $.ajax("data/Polygon_Tornado.geojson", {
+            dataType: "json"
+            //success: function(response){
+                //createPolygons(map,response);
+                //checkRadioPolygons(map,statePolygons);
+
+            })
+        //});
+    };
+  
+    
+}
 
 
 $(document).ready(createMap);
