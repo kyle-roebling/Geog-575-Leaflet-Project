@@ -251,27 +251,17 @@ function getData(map){
 
     function pointData(){
         return $.ajax("data/tornadoData.geojson", {    
-                dataType: "json"
-                //success: function(response){
-                    //createPoints(map,response,months);
-                    //createSequenceControls(map,months);
+                dataType: "json"  
             })
-            //});
     };
 
     function polygonData(){
         return $.ajax("data/Polygon_Tornado.geojson", {
             dataType: "json"
-            //success: function(response){
-                //createPolygons(map,response);
-                //checkRadioPolygons(map,statePolygons);
-
             })
-        //});
     };
   
     
 }
-
 
 $(document).ready(createMap);
