@@ -176,7 +176,7 @@ function clear_panel(){
 function updatePoints(map, month){
 
     map.eachLayer(function(layer){
-
+        //console.log(layer.feature);
         if (layer.feature && layer.feature.properties['State']){
 
             //access feature properties
@@ -185,9 +185,19 @@ function updatePoints(map, month){
             //For each feature, determine its value for the selected attribute
             var newValue = Number(props[month]);
             
-            //update each feature's radius based on new attribute values
-            var radius = calcPropRadius(newValue);
-            layer.setRadius(radius);
+            if (layer.feature.geometry.type === "Point"){
+                //update each feature's radius based on new attribute values
+                var radius = calcPropRadius(newValue);
+                layer.setRadius(radius);
+            };
+            
+            if (layer.feature.geometry.type === "MultiPolygon"){
+                console.log('got here');
+                console.log(props[month]);
+                value = color(props[month]);
+                console.log(value);
+                layer.setStyle({fillColor: value})
+            }
             
             //build popup content string
             var popupContent = "<h4>"+ month + "</h4>"+"<p><b>State:</b> " + props.State + "</p>" + "<p> <b>Tornadoes: </b>" +  props[month]  +"</p>"
@@ -203,7 +213,32 @@ function updatePoints(map, month){
 
 
 function createPolygons(map,data){
-    return L.geoJSON(data);
+    return L.geoJSON(data,{
+        style: choropleth,
+    });
+}
+
+function color(data){
+    return data > 14  ? '#f03b20' :
+           data > 7   ? '#feb24c' :
+           data > 1   ? '#ffeda0' :
+                        '#e0e0d1';
+};
+
+function choropleth(feature) {
+
+    return {
+        fillColor: color(feature.properties.January),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+function updatePolygons(layer,month) {
+    
 }
 
 function checkRadio(map,statePoints,statePolygons){
@@ -216,7 +251,6 @@ function checkRadio(map,statePoints,statePolygons){
         $("#point").prop("checked", false)
         if ($("input:checked" ).val() === "Choropleth"){
             $("#polygon").prop("checked", true);
-            console.log($("input:checked" ).val());
             statePoints.remove();
             statePolygons.addTo(map);
         };
@@ -225,7 +259,6 @@ function checkRadio(map,statePoints,statePolygons){
     // if proportional is selected remove choropleth symbols and add proportional
     $("#point").on( "click", function(){
         $("#polygon").prop("checked", false)
-        console.log('point');
         if ($( "input:checked" ).val() === "Proportional"){
             $("#point").prop("checked", true)
             $("#polygon").prop("checked", false);
@@ -243,9 +276,10 @@ function getData(map){
     
     $.when(pointData(), polygonData()).done(function(responsePoints, responsePolygons){
             statePoints = createPoints(map,responsePoints,months);
-            statePolygons = createPolygons(map,responsePolygons);
-            createSequenceControls(map,months);
+            statePolygons = createPolygons(map,responsePolygons,months[0]);
             checkRadio(map,statePoints,statePolygons);
+            createSequenceControls(map,months);
+            
     });
 
 
