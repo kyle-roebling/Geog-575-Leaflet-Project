@@ -11,6 +11,7 @@ var center = [38.50,-98.00]
 var tileLayer = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 var attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
+index = 0
 
 
 // Function to create map object, tile map background and load data to map
@@ -128,7 +129,7 @@ function createSequenceControls(map,months){
     //input listener for slider
     $('.range-slider').click(function(){
         // starting index value
-        var index = $('.range-slider').val();
+        index = $('.range-slider').val();
         clear_panel();
         updatePoints(map, months[index]);
     });
@@ -136,7 +137,7 @@ function createSequenceControls(map,months){
     //input listener for buttons
     $('.skip').click(function(){
         //Assign slider index value
-        var index = $('.range-slider').val();
+        index = $('.range-slider').val();
         
         //increment or decrement depending on button clicked
         if ($(this).attr('id') == 'forward'){
@@ -156,7 +157,12 @@ function createSequenceControls(map,months){
         //update slider
         $('.range-slider').val(index);
         
+   
     });
+}
+
+function getIndex(){
+    return $('.range-slider').val();
 }
 
 function panel_list(feature,month){
@@ -192,10 +198,8 @@ function updatePoints(map, month){
             };
             
             if (layer.feature.geometry.type === "MultiPolygon"){
-                console.log('got here');
                 console.log(props[month]);
                 value = color(props[month]);
-                console.log(value);
                 layer.setStyle({fillColor: value})
             }
             
@@ -228,7 +232,7 @@ function color(data){
 function choropleth(feature) {
 
     return {
-        fillColor: color(feature.properties.January),
+        fillColor: color(feature.properties.january),
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -238,7 +242,7 @@ function choropleth(feature) {
 }
 
 
-function checkRadio(map,statePoints,statePolygons){
+function checkRadio(map,statePoints,statePolygons,month){
     // add points to map first
     statePoints.addTo(map);
     
@@ -250,6 +254,9 @@ function checkRadio(map,statePoints,statePolygons){
             $("#polygon").prop("checked", true);
             statePoints.remove();
             statePolygons.addTo(map);
+            sliderIndex = getIndex();
+            console.log(sliderIndex);
+            updatePoints(map,months[sliderIndex]);
         };
     });
     
@@ -261,6 +268,9 @@ function checkRadio(map,statePoints,statePolygons){
             $("#polygon").prop("checked", false);
             statePolygons.remove();
             statePoints.addTo(map);
+            sliderIndex = getIndex();
+            updatePoints(map,months[sliderIndex]);
+            
         };
     });
     
@@ -274,8 +284,9 @@ function getData(map){
     $.when(pointData(), polygonData()).done(function(responsePoints, responsePolygons){
             statePoints = createPoints(map,responsePoints,months);
             statePolygons = createPolygons(map,responsePolygons,months[0]);
-            checkRadio(map,statePoints,statePolygons);
             createSequenceControls(map,months);
+            checkRadio(map,statePoints,statePolygons,months[index]);
+            
             
     });
 
