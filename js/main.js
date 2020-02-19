@@ -130,7 +130,7 @@ function createSequenceControls(map,months){
     $('.range-slider').click(function(){
         // starting index value
         index = $('.range-slider').val();
-        clear_panel();
+        clearPanel();
         updatePoints(map, months[index]);
     });
     
@@ -144,13 +144,13 @@ function createSequenceControls(map,months){
             index++;
             //if past the last attribute, wrap around to first attribute
             index = index > 11 ? 0 : index;
-            clear_panel();
+            clearPanel();
             updatePoints(map, months[index]);
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //if past the first attribute, wrap around to last attribute
             index = index < 0 ? 11 : index;
-            clear_panel();
+            clearPanel();
             updatePoints(map, months[index]);
         };
         
@@ -174,7 +174,7 @@ function panel_list(feature,month){
     };
 };
 
-function clear_panel(){
+function clearPanel(){
     $("ul").empty();
 };
 
@@ -254,8 +254,8 @@ function checkRadio(map,statePoints,statePolygons,month){
             $("#polygon").prop("checked", true);
             statePoints.remove();
             statePolygons.addTo(map);
+            clearPanel();
             sliderIndex = getIndex();
-            console.log(sliderIndex);
             updatePoints(map,months[sliderIndex]);
         };
     });
@@ -268,6 +268,7 @@ function checkRadio(map,statePoints,statePolygons,month){
             $("#polygon").prop("checked", false);
             statePolygons.remove();
             statePoints.addTo(map);
+            clearPanel();
             sliderIndex = getIndex();
             updatePoints(map,months[sliderIndex]);
             
