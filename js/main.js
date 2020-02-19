@@ -161,6 +161,43 @@ function createSequenceControls(map,months){
     });
 }
 
+function createSequenceControls2(map,months){
+    var SequenceControl = L.Control.extend({
+        options:{
+            position: 'bottomleft'
+        },
+        
+        onAdd: function(map){
+            
+            // create the control container div with a particular class name
+            var container = L.DomUtil.create('div', 'sequence-control-container');
+
+            //create range input element (slider)
+            $(container).append('<input class="range-slider" type="range">');
+            
+            //Foward and Reverse Buttons
+            $(container).append('<button class="skip" id="reverse" title="Reverse"> <img src="img/reverse.png"> </button>');
+            $(container).append('<button class="skip" id="forward" title="Forward"> <img src="img/forward.png"> </button>');
+    
+            return container;
+        }
+    });
+    
+    map.addControl(new SequenceControl());
+              
+    //set slider attributes
+    $('.range-slider').attr({
+            max: 11,
+            min: 0,
+            value: 0,
+            step: 1
+        });
+    
+    
+}
+
+
+
 function getIndex(){
     return $('.range-slider').val();
 }
@@ -297,6 +334,7 @@ function getData(map){
             statePoints = createPoints(map,responsePoints,months);
             statePolygons = createPolygons(map,responsePolygons,months[0]);
             createSequenceControls(map,months);
+            createSequenceControls2(map,months);
             checkRadio(map,statePoints,statePolygons,months[index]);
             
             
