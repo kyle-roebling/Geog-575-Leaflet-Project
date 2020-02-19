@@ -201,7 +201,18 @@ function updatePoints(map, month){
                 console.log(props[month]);
                 value = color(props[month]);
                 layer.setStyle({fillColor: value})
-            }
+                
+                
+                //event listeners to open popup on hover for choropleth
+                layer.on({
+                    mouseover: function(){
+                        this.openPopup();
+                    },
+                    mouseout: function(){
+                        this.closePopup();
+                    }
+                    });
+            };
             
             //build popup content string
             var popupContent = "<h4>"+ month + "</h4>"+"<p><b>State:</b> " + props.State + "</p>" + "<p> <b>Tornadoes: </b>" +  props[month]  +"</p>"
@@ -225,7 +236,7 @@ function createPolygons(map,data){
 function color(data){
     return data > 14  ? '#f03b20' :
            data > 7   ? '#feb24c' :
-           data > 1   ? '#ffeda0' :
+           data >= 1   ? '#ffeda0' :
                         '#e0e0d1';
 };
 
