@@ -45,7 +45,7 @@ function calcPropRadius(attValue) {
 };
 
 //Calculate the max, mean, and min values for a given attribute
-function getCircleValues(map,months){
+function getCircleValues(map,month){
     //start with min at highest possible and max at lowest possible number
     var min = Infinity,
         max = -Infinity;
@@ -54,7 +54,7 @@ function getCircleValues(map,months){
 
         //get the attribute value
         if (layer.feature){
-            var attributeValue = Number(layer.feature.properties[months[index]]);
+            var attributeValue = Number(layer.feature.properties[month]);
 
             //test for min
             if (attributeValue < min){
@@ -212,8 +212,7 @@ function createSequenceControls(map,months){
         // starting index value
         index = $('.range-slider').val();
         clearPanel();
-        updatePoints(map, months[index]);
-        updateLegend(map,months);
+        updatePoints(map, months[index]);;
     });
     
     //input listener for buttons
@@ -228,14 +227,12 @@ function createSequenceControls(map,months){
             index = index > 11 ? 0 : index;
             clearPanel();
             updatePoints(map, months[index]);
-            updateLegend(map,months);
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //if past the first attribute, wrap around to last attribute
             index = index < 0 ? 11 : index;
             clearPanel();
             updatePoints(map, months[index]);
-            updateLegend(map,months);
         };
         
         //update slider
@@ -261,7 +258,7 @@ function createLegend(map,months){
             $(container).append('<div id="temporal-legend">')
 
             //Step 1: start attribute legend svg string
-            var svg = '<svg id="attribute-legend" width="180px" height="180px">';
+            var svg = '<svg id="attribute-legend" width="180px" height="60px">';
         
             //array of circle names to base loop on
             var circles = ["max", "mean", "min"];
@@ -270,39 +267,39 @@ function createLegend(map,months){
             for (var i=0; i<circles.length; i++){
                 //circle string
                 svg += '<circle class="legend-circle" id="' + circles[i] + 
-                '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="90"/>';
+                '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="30"/>';
             };
 
             //close svg string
-            svg += "</svg>";
-
-            
-            //add attribute legend svg to container
-            $(container).append(svg);
+            svg += "</svg>"
+        
+        //add attribute legend svg to container
+        $(container).append(svg);
 
             return container;
         }
     });
 
     map.addControl(new LegendControl());
-    updateLegend(map,months);
+    updateLegend(map,months[index]);
     
 }
 
-function updateLegend(map,months){
-    
-    $('#temporal-legend').html(months[index]);
-    
+function updateLegend(map,month){
+    console.log(month);
+    $('#temporal-legend').html(month);
+
     //get the max, mean, and min values as an object
-    var circleValues = getCircleValues(map,months);
+    var circleValues = getCircleValues(map,month);
     
     for (var key in circleValues){
         //get the radius
         var radius = calcPropRadius(circleValues[key]);
-
+        console.log(radius);
+        console.log(key);
         //Step 3: assign the cy and r attributes
         $('#'+key).attr({
-            cy: 179 - radius,
+            cy: 59 - radius,
             r: radius
         });
     };
@@ -342,6 +339,7 @@ function updatePoints(map, month){
                 //update each feature's radius based on new attribute values
                 var radius = calcPropRadius(newValue);
                 layer.setRadius(radius);
+              
             };
             
             if (layer.feature.geometry.type === "MultiPolygon"){
@@ -370,10 +368,12 @@ function updatePoints(map, month){
             //recreate the panel text for the current month selected
             panel_list(layer.feature,month);
             
-            $('.legend-control-container').text(month);
-        
+            $('temporal-legend').html(month);
+            
         };
-});
+        updateLegend(map,month);
+    });
+
 }
 
 function createPolygons(map,data){
