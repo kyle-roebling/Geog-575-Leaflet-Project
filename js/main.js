@@ -106,6 +106,35 @@ function createPoints(map,data, months){
                 });
 }
 
+function mapControls(map,months){
+    
+    var SequenceControl = L.Control.extend({
+        options:{
+            position: 'topright'
+        },
+        
+        onAdd: function(map){
+            
+            // create the control container div with a particular class name
+            var container = L.DomUtil.create('div', 'mapControls');
+            
+            // add radio controls for Proportional Symbol and Chropleth
+            $(container).append('<input type="radio" id="point" name="point" value="Proportional" checked="checked">')
+             $(container).append('<label for="point">Proportional Symbol</label><br>')
+            
+            $(container).append('<input type="radio" id="polygon" name="polygon" value="Choropleth" >')
+            $(container).append('<label for="polygon">Choropleth</label><br>')
+
+        
+            return container;
+        }
+            
+    });
+    
+    map.addControl(new SequenceControl());
+    
+}
+
 
 function createSequenceControls(map,months){
     var SequenceControl = L.Control.extend({
@@ -316,7 +345,8 @@ function getData(map){
     $.when(pointData(), polygonData()).done(function(responsePoints, responsePolygons){
             statePoints = createPoints(map,responsePoints,months);
             statePolygons = createPolygons(map,responsePolygons,months[0]);
-            createSequenceControls(map,months);;
+            createSequenceControls(map,months);
+            mapControls(map,months);
             checkRadio(map,statePoints,statePolygons,months[index]);
             
             
