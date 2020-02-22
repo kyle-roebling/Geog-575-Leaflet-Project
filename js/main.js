@@ -47,7 +47,7 @@ function calcPropRadius(attValue) {
 //Calculate the max, mean, and min values for a given attribute
 function getCircleValues(map,month){
     //start with min at highest possible and max at lowest possible number
-    var min = Infinity,
+    var min = 1,
         max = -Infinity;
 
     map.eachLayer(function(layer){
@@ -56,10 +56,6 @@ function getCircleValues(map,month){
         if (layer.feature){
             var attributeValue = Number(layer.feature.properties[month]);
 
-            //test for min
-            if (attributeValue < min){
-                min = attributeValue;
-            };
 
             //test for max
             if (attributeValue > max){
@@ -260,15 +256,21 @@ function createLegend(map,months){
             //Step 1: start attribute legend svg string
             var svg = '<svg id="attribute-legend" width="180px" height="60px">';
         
-            //array of circle names to base loop on
-            var circles = ["max", "mean", "min"];
-        
-            //Step 2: loop to add each circle and text to svg string
-            for (var i=0; i<circles.length; i++){
-                //circle string
-                svg += '<circle class="legend-circle" id="' + circles[i] + 
-                '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="30"/>';
+            //object to base loop on...replaces Example 3.10 line 1
+            var circles = {
+            max: 20,
+            mean: 40,
+            min: 60
             };
+
+            //loop to add each circle and text to svg string
+            for (var circle in circles){
+                //circle string
+                svg += '<circle class="legend-circle" id="' + circle + '" fill="red" fill-opacity="0.8" stroke="#000000" cx="30"/>';
+
+                //text string
+                svg += '<text id="' + circle + '-text" x="65" y="' + circles[circle] + '"></text>';
+        };
 
             //close svg string
             svg += "</svg>"
@@ -297,14 +299,19 @@ function updateLegend(map,month){
         var radius = calcPropRadius(circleValues[key]);
         console.log(radius);
         console.log(key);
+        
         //Step 3: assign the cy and r attributes
         $('#'+key).attr({
             cy: 59 - radius,
             r: radius
         });
-    };
-}
-
+        
+        //Step 4: add legend text
+        $('#'+key+'-text').text(Math.round(circleValues[key]) + " Tornadoes");
+    }
+};
+    
+                                
 function getIndex(){
     return $('.range-slider').val();
 }
