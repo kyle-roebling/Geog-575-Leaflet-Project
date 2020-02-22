@@ -23,6 +23,7 @@
     background-color: rgba(255,255,255,0.8);
     padding: 2px;
     text-align: left;
+    border: solid gray 1px;
     
 }
 
@@ -34,6 +35,15 @@
     line-height: 45px;
     text-align: center;
     border: solid gray 1px;
+}
+
+.legend-control-container{
+    width: 150px;
+    background-color: rgba(255,255,255,0.8);
+    padding: 2px;
+    text-align: center;
+    border: solid gray 1px;
+    
 }
 
 #slider{

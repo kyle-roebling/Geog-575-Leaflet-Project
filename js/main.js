@@ -135,7 +135,6 @@ function mapControls(map,months){
     
 }
 
-
 function createSequenceControls(map,months){
     var SequenceControl = L.Control.extend({
         options:{
@@ -208,7 +207,25 @@ function createSequenceControls(map,months){
     });  
 }
 
+function createLegend(map,months){
 
+    var LegendControl = L.Control.extend({
+        options: {
+            position: 'bottomright'
+        },
+        
+    onAdd: function (map) {
+            // create the control container with a particular class name
+            var container = L.DomUtil.create('div', 'legend-control-container');
+
+            $(container).text(months[index]);
+
+            return container;
+        }
+    });
+
+    map.addControl(new LegendControl());
+}
 
 function getIndex(){
     return $('.range-slider').val();
@@ -269,7 +286,10 @@ function updatePoints(map, month){
             //bind the popup to the circle marker
             layer.bindPopup(popupContent);
             
+            //recreate the panel text for the current month selected
             panel_list(layer.feature,month);
+            
+            $('.legend-control-container').text(month);
         
         };
 });
@@ -347,6 +367,7 @@ function getData(map){
             statePolygons = createPolygons(map,responsePolygons,months[0]);
             createSequenceControls(map,months);
             mapControls(map,months);
+            createLegend(map,months);
             checkRadio(map,statePoints,statePolygons,months[index]);
             
             
