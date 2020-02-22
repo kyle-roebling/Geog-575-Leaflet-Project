@@ -1,12 +1,12 @@
 
 #mapid {
     height: 550px;
-    width: 75%;
+    width: 80%;
     display: inline-block;
 }
 
 #panel{
-    width: 18%;
+    width: 15%;
     padding: 20px;
     text-align: center;
     display: inline-block;
