@@ -106,27 +106,45 @@ function createPoints(map,data, months){
                 });
 }
 
-// Create slider of the sequence interaction with the user
+
 function createSequenceControls(map,months){
-    //Slider
-    $('#slider').append('<input class="range-slider" type="range">');
-    //Foward and Reverse Buttons
-    $('#slider').append('<button class="skip" id="reverse">Reverse</button>');
-    $('#slider').append('<button class="skip" id="forward">Skip</button>');
-    //Add icons for Foward and Reverse
-    $('#reverse').html('<img src="img/reverse.png">');
-    $('#forward').html('<img src="img/forward.png">');
+    var SequenceControl = L.Control.extend({
+        options:{
+            position: 'bottomleft'
+        },
+        
+        onAdd: function(map){
+            
+            // create the control container div with a particular class name
+            var container = L.DomUtil.create('div', 'sequence-control-container');
+            
+            //kill any mouse event listeners on the map
+            $(container).on('mousedown dblclick', function(e){
+                L.DomEvent.stopPropagation(e);
+            });
+
+            //create range input element (slider)
+            $(container).append('<input class="range-slider" type="range">');
+            
+            //Foward and Reverse Buttons
+            $(container).append('<button class="skip" id="reverse" title="Reverse"> <img src="img/reverse.png"> </button>');
+            $(container).append('<button class="skip" id="forward" title="Forward"> <img src="img/forward.png"> </button>');
     
+            return container;
+        }
+    });
+    
+    map.addControl(new SequenceControl());
+              
     //set slider attributes
     $('.range-slider').attr({
-        max: 11,
-        min: 0,
-        value: 0,
-        step: 1
-    });
-
+            max: 11,
+            min: 0,
+            value: 0,
+            step: 1
+        });
     
-    //input listener for slider
+     //input listener for slider
     $('.range-slider').click(function(){
         // starting index value
         index = $('.range-slider').val();
@@ -158,42 +176,7 @@ function createSequenceControls(map,months){
         $('.range-slider').val(index);
         
    
-    });
-}
-
-function createSequenceControls2(map,months){
-    var SequenceControl = L.Control.extend({
-        options:{
-            position: 'bottomleft'
-        },
-        
-        onAdd: function(map){
-            
-            // create the control container div with a particular class name
-            var container = L.DomUtil.create('div', 'sequence-control-container');
-
-            //create range input element (slider)
-            $(container).append('<input class="range-slider" type="range">');
-            
-            //Foward and Reverse Buttons
-            $(container).append('<button class="skip" id="reverse" title="Reverse"> <img src="img/reverse.png"> </button>');
-            $(container).append('<button class="skip" id="forward" title="Forward"> <img src="img/forward.png"> </button>');
-    
-            return container;
-        }
-    });
-    
-    map.addControl(new SequenceControl());
-              
-    //set slider attributes
-    $('.range-slider').attr({
-            max: 11,
-            min: 0,
-            value: 0,
-            step: 1
-        });
-    
-    
+    });  
 }
 
 
@@ -333,8 +316,7 @@ function getData(map){
     $.when(pointData(), polygonData()).done(function(responsePoints, responsePolygons){
             statePoints = createPoints(map,responsePoints,months);
             statePolygons = createPolygons(map,responsePolygons,months[0]);
-            createSequenceControls(map,months);
-            createSequenceControls2(map,months);
+            createSequenceControls(map,months);;
             checkRadio(map,statePoints,statePolygons,months[index]);
             
             

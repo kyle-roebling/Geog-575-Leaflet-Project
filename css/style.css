@@ -18,6 +18,17 @@
     text-align: left;
 }
 
+
+.sequence-control-container {
+    width: 350px;
+    height: 30px;
+    background-color: rgba(255,255,255,0.8);
+    padding: 10px;
+    line-height: 45px;
+    text-align: center;
+    border: solid gray 1px;
+}
+
 #slider{
     text-align: center;
     width: 75%;
@@ -32,7 +43,7 @@
 }
 
 .range-slider {
-    width: 50%;
+    width: 200px;
 }
 
 #forward{
