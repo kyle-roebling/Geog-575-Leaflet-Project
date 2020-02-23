@@ -249,57 +249,63 @@ function createLegend(map,months){
             // create the control container with a particular class name
             var container = L.DomUtil.create('div', 'legend-control-container');
 
+            // add title to hold month value
+            $(container).append('<div id="month-legend">')
             
             //add temporal legend div to container
             $(container).append('<div id="temporal-legend">')
-
-            //Step 1: start attribute legend svg string
-            var svg = '<svg id="attribute-legend" width="180px" height="60px">';
         
-            //object to base loop on...replaces Example 3.10 line 1
-            var circles = {
-            max: 20,
-            mean: 40,
-            min: 60
-            };
-
-            //loop to add each circle and text to svg string
-            for (var circle in circles){
-                //circle string
-                svg += '<circle class="legend-circle" id="' + circle + '" fill="red" fill-opacity="0.8" stroke="#000000" cx="30"/>';
-
-                //text string
-                svg += '<text id="' + circle + '-text" x="65" y="' + circles[circle] + '"></text>';
-        };
-
-            //close svg string
-            svg += "</svg>"
-        
-        //add attribute legend svg to container
-        $(container).append(svg);
 
             return container;
         }
     });
 
     map.addControl(new LegendControl());
-    updateLegend(map,months[index]);
+    legendSymbol(map,months[index]);
     
 }
 
-function updateLegend(map,month){
-    console.log(month);
-    $('#temporal-legend').html(month);
+function legendSymbol(map,month){
+    
+        //Step 1: start attribute legend svg string
+        var svg = '<svg id="attribute-legend" width="180px" height="60px">';
+        
+        //object to base loop on...replaces Example 3.10 line 1
+        var circles = {
+        max: 20,
+        mean: 40,
+        min: 60
+        };
 
+        //loop to add each circle and text to svg string
+        for (var circle in circles){
+            //circle string
+            svg += '<circle class="legend-circle" id="' + circle + '" fill="red" fill-opacity="0.8" stroke="#000000" cx="30"/>';
+
+            //text string
+            svg += '<text id="' + circle + '-text" x="65" y="' + circles[circle] + '"></text>';
+            };
+
+        //close svg string
+        svg += "</svg>"
+    
+        //add attribute legend svg to container
+        $('#temporal-legend').append(svg);
+    
+        updateLegend(map,month);
+}
+
+function updateLegend(map,month){
+   
+    $('#month-legend').html(month);
+    
     //get the max, mean, and min values as an object
     var circleValues = getCircleValues(map,month);
     
     for (var key in circleValues){
         //get the radius
         var radius = calcPropRadius(circleValues[key]);
-        console.log(radius);
-        console.log(key);
-        
+
         //Step 3: assign the cy and r attributes
         $('#'+key).attr({
             cy: 59 - radius,
@@ -310,8 +316,8 @@ function updateLegend(map,month){
         $('#'+key+'-text').text(Math.round(circleValues[key]) + " Tornadoes");
     }
 };
-    
-                                
+
+                            
 function getIndex(){
     return $('.range-slider').val();
 }
