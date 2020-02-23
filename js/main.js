@@ -255,7 +255,6 @@ function createLegend(map,months){
             //add temporal legend div to container
             $(container).append('<div id="temporal-legend">')
         
-
             return container;
         }
     });
@@ -263,6 +262,16 @@ function createLegend(map,months){
     map.addControl(new LegendControl());
     legendSymbol(map,months[index]);
     
+}
+
+function legendChoropleth(){
+    grades = [1,7,14]
+    
+    $('#temporal-legend').empty();
+    
+    for (var i = 0; i < grades.length; i++) {
+        $('#temporal-legend').append( ' <i style="background:' + color(grades[i] + 1) + '"></i>' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+')); 
+    };
 }
 
 function legendSymbol(map,month){
@@ -380,9 +389,7 @@ function updatePoints(map, month){
             
             //recreate the panel text for the current month selected
             panel_list(layer.feature,month);
-            
-            $('temporal-legend').html(month);
-            
+                 
         };
         updateLegend(map,month);
     });
@@ -462,6 +469,7 @@ function getData(map){
             mapControls(map,months);
             checkRadio(map,statePoints,statePolygons,months[index]);
             createLegend(map,months);
+            legendChoropleth();
             
             
     });

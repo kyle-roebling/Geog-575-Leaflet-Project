@@ -46,6 +46,15 @@
     
 }
 
+#temporal-legend i {
+    width: 50px;
+    height: 15px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+    border: solid gray 1px;
+}
+
 #slider{
     text-align: center;
     width: 75%;
