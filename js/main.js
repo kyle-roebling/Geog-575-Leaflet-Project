@@ -12,6 +12,8 @@ var tileLayer = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 var attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
 index = 0
+var point = true;
+var polygon = false;
 
 
 // Function to create map object, tile map background and load data to map
@@ -264,7 +266,10 @@ function createLegend(map,months){
     
 }
 
-function legendChoropleth(){
+function legendChoropleth(month){
+    
+    $('#month-legend').html(month);
+    
     grades = [1,7,14]
     
     $('#temporal-legend').empty();
@@ -276,10 +281,12 @@ function legendChoropleth(){
 
 function legendSymbol(map,month){
     
+        $('#temporal-legend').empty();
+    
         //Step 1: start attribute legend svg string
         var svg = '<svg id="attribute-legend" width="180px" height="60px">';
         
-        //object to base loop on...replaces Example 3.10 line 1
+        //object to base loop on
         var circles = {
         max: 20,
         mean: 40,
@@ -365,7 +372,6 @@ function updatePoints(map, month){
             };
             
             if (layer.feature.geometry.type === "MultiPolygon"){
-                console.log(props[month]);
                 value = color(props[month]);
                 layer.setStyle({fillColor: value})
                 
@@ -391,8 +397,16 @@ function updatePoints(map, month){
             panel_list(layer.feature,month);
                  
         };
-        updateLegend(map,month);
+         
     });
+    console.log(point);
+    console.log(polygon);
+
+    if(point){
+         updateLegend(map,month);
+    } else if (polygon){
+         legendChoropleth(month);
+    };
 
 }
 
@@ -436,6 +450,10 @@ function checkRadio(map,statePoints,statePolygons,month){
             statePolygons.addTo(map);
             clearPanel();
             sliderIndex = getIndex();
+            point = false;
+            polygon = true;
+            console.log(point);
+            console.log(polygon);
             updatePoints(map,months[sliderIndex]);
         };
     });
@@ -450,8 +468,13 @@ function checkRadio(map,statePoints,statePolygons,month){
             statePoints.addTo(map);
             clearPanel();
             sliderIndex = getIndex();
+            console.log(point);
+            console.log(polygon);
+            point = true;
+            polygon = false;
+            legendSymbol(map,month)
             updatePoints(map,months[sliderIndex]);
-            
+             
         };
     });
     
@@ -468,10 +491,7 @@ function getData(map){
             createSequenceControls(map,months);
             mapControls(map,months);
             checkRadio(map,statePoints,statePolygons,months[index]);
-            createLegend(map,months);
-            legendChoropleth();
-            
-            
+            createLegend(map,months);       
     });
 
 
