@@ -19,12 +19,15 @@ var polygon = false;
 // Function to create map object, tile map background and load data to map
 function createMap(){ 
     
+    $('#mapid').height(window.innerHeight);
+    
     // Create an instance of the leaflet mapping object
     var map = L.map('mapid',{
         center: center,
-        zoom: 4
+        zoom: 4.25
     });
     
+
     //add base tilelayer
     L.tileLayer(tileLayer, {
         attribution: attribution
