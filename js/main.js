@@ -21,20 +21,27 @@ var polygon = false;
 // Function to create map object, tile map background and load data to map
 function createMap(){ 
     
-    $('#main_header').height(window.innerHeight * .09);
+    $('#main_header').height(window.innerHeight * .085);
     $('#mapid').height(window.innerHeight * .91);
+    createHeader();
     
     // Create an instance of the leaflet mapping object
     var map = L.map('mapid',{
         center: center,
-        zoom: 4.25
+        zoom: 4.25,
+        minZoom: 4.25,
+        maxZoom: 6
     });
     
-
+    // Set map bounds to area of interest
+    map.setMaxBounds(map.getBounds());
+    
     //add base tilelayer
     L.tileLayer(tileLayer, {
         attribution: attribution
     }).addTo(map);
+    
+    
     
     //load data from source files
     getData(map);
@@ -216,7 +223,8 @@ function createSequenceControls(map,months){
         // starting index value
         index = $('.range-slider').val();
         clearPanel();
-        updatePoints(map, months[index]);;
+        updatePoints(map, months[index]);
+        createHeader();
     });
     
     //input listener for buttons
@@ -231,12 +239,14 @@ function createSequenceControls(map,months){
             index = index > 11 ? 0 : index;
             clearPanel();
             updatePoints(map, months[index]);
+            createHeader();
         } else if ($(this).attr('id') == 'reverse'){
             index--;
             //if past the first attribute, wrap around to last attribute
             index = index < 0 ? 11 : index;
             clearPanel();
             updatePoints(map, months[index]);
+            createHeader();
         };
         
         //update slider
@@ -270,6 +280,13 @@ function createLegend(map,months){
     map.addControl(new LegendControl());
     legendSymbol(map,months[index]);
     
+}
+
+function createHeader(){
+    
+    $('#header_month').empty();
+    $('#header_month').append(months[index]);
+
 }
 
 
