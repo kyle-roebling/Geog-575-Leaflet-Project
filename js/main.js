@@ -272,6 +272,8 @@ function createLegend(map,months){
     
 }
 
+
+
 function legendChoropleth(month){
     
     $('#month-legend').html(month);
