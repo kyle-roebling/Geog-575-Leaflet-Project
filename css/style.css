@@ -5,22 +5,24 @@ body{
 
 
 #main_header{
-    background-color: rgb(255,255,255,1);
-    margin-bottom: 5px;
-    color: black;
+    background-color: #595959;
+    color: white;
     text-align: center;
+    /*
     z-index: 1000;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     padding: 10px;
-    border: solid black 1px;
+    */
+    border: solid white 1.25px;
 
     
 }
 
 #main_header h2{
-    margin 0 px;
+    margin 0;
+    padding 0;
     
 }
 
@@ -33,14 +35,15 @@ body{
 #panel{
     width: 15%;
     height: auto;
-    max-height: 65%;
+    max-height: 55%;
     position: absolute;
     bottom: 50%;
     transform: translateY(+50%);
     padding: 5px;
     text-align: center;
     vertical-align: top;
-    background-color: rgb(255,255,255,.70);
+    background-color: #d9d9d9;
+    border: solid black 1.25px;
     z-index: 1000;
     overflow-y: auto;
 }
@@ -54,45 +57,61 @@ body{
 }
 
 .mapControls{
-    width: 150px;
-    background-color: rgba(255,255,255,0.8);
-    padding: 2px;
+    width: auto;
+    background-color: #d9d9d9;
+    padding: 5px;
     text-align: left;
-    border: solid gray 1px;
+    font-size: 14px;
+    border: solid black 1.25px;
     
 }
 
 .sequence-control-container {
     width: 250px;
     height: 30px;
-    background-color: rgba(255,255,255,0.8);
     padding: 10px;
     line-height: 45px;
     text-align: center;
-    border: solid gray 1px;
+    background-color: #d9d9d9;
+    border: solid black 1.25px;
 }
 
 .legend-control-container{
-    width: 150px;
-    background-color: rgba(255,255,255,0.8);
+    width: auto;
+    height: auto;
+    background-color: #d9d9d9;
     padding: 2px;
     text-align: center;
     border: solid gray 1px;
     
 }
 
+#temporal-legend{
+    width: auto;
+    height: auto;
+    font-size: 14px;
+    padding: 5px;
+}
+
 #temporal-legend i {
-    width: 50px;
+    width: 70px;
     height: 15px;
     float: left;
     margin-right: 8px;
     opacity: 0.7;
     border: solid gray 1px;
+    padding: 5px;
 }
 
-#slider{
+#month-legend{
+    font-size: 16px; 
+}
+
+
+.range-slider{
+    -webkit-appearance: none;
     text-align: center;
-    width: 75%;
+    background: grey;
 }
 
 .leaflet-popup-content h4 {

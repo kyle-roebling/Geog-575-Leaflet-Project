@@ -8,7 +8,9 @@ leaftet mapping api
 
 // Global map variables
 var center = [38.50,-98.00]
-var tileLayer = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+//var tileLayer = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+var tileLayer = 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoia3JvZWJsaW5nIiwiYSI6ImNqeXczaGplMjB3YjgzYmxyZGU1OG90bXUifQ.ItIrq8YGHvZIilkcx-U8Ag'
+
 var attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
 index = 0
@@ -19,7 +21,8 @@ var polygon = false;
 // Function to create map object, tile map background and load data to map
 function createMap(){ 
     
-    $('#mapid').height(window.innerHeight);
+    $('#main_header').height(window.innerHeight * .09);
+    $('#mapid').height(window.innerHeight * .91);
     
     // Create an instance of the leaflet mapping object
     var map = L.map('mapid',{
