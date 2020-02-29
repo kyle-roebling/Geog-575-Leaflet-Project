@@ -21,8 +21,8 @@ var polygon = false;
 // Function to create map object, tile map background and load data to map
 function createMap(){ 
     
-    $('#main_header').height(window.innerHeight * .085);
-    $('#mapid').height(window.innerHeight * .91);
+    $('#main_header').height(window.innerHeight * .11);
+    $('#mapid').height(window.innerHeight * .89);
     createHeader();
     
     // Create an instance of the leaflet mapping object
