@@ -27,7 +27,6 @@ body{
 }
 
 #header_month{
-    font-size: 24px;
     margin: 0px;
     padding: 5px;
 }
@@ -38,6 +37,8 @@ body{
     display: inline-block;
 }
 
+
+@media only screen and (min-width: 768px){
 #panel{
     width: 12%;
     height: auto;
@@ -54,11 +55,18 @@ body{
     overflow-y: auto;
 }
 
-#panel ul{
-    width 0%;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+   #panel{
+   position: absolute;
+   left: -250;
+  }
 }
 
 #state_list{
+    padding: 0px;
     text-align: left;
     list-style-type: none;
 }

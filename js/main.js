@@ -21,7 +21,7 @@ var polygon = false;
 // Function to create map object, tile map background and load data to map
 function createMap(){ 
     
-    $('#main_header').height(window.innerHeight * .11);
+    //$('#main_header').height(window.innerHeight * .11);
     $('#mapid').height(window.innerHeight * .89);
     createHeader();
     
