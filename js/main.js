@@ -22,7 +22,7 @@ var polygon = false;
 function createMap(){ 
     
     //$('#main_header').height(window.innerHeight * .11);
-    $('#mapid').height(window.innerHeight * .86);
+    $('#mapid').height(window.innerHeight * .83);
     createHeader();
     
     // Create an instance of the leaflet mapping object
